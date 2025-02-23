@@ -18,7 +18,7 @@ source <path-to-kos>/environ.sh
 
 3. Generate build files
 ```bash
-cmake -S . -B builddc -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=${KOS_CMAKE_TOOLCHAIN} -DOS_KOS:STRING=1
+cmake -S . -B builddc -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=${KOS_CMAKE_TOOLCHAIN} -DOS_KOS:STRING=1 -DZLIB_INCLUDE_DIR:STRING="${KOS_PORTS}/include/zlib"
 ```
 
 4. Build the library
