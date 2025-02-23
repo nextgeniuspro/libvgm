@@ -40,8 +40,9 @@ if ("${CMAKE_VERSION}" VERSION_LESS "3.20")
 		set(CMAKE_C_BYTE_ORDER "LITTLE_ENDIAN")
 	endif()
 endif()
+
 # add defines for Little/Big Endian
-if ("${CMAKE_C_BYTE_ORDER}" STREQUAL "BIG_ENDIAN")
+if (OS_KOS OR "${CMAKE_C_BYTE_ORDER}" STREQUAL "BIG_ENDIAN")
 	add_definitions("-D VGM_BIG_ENDIAN")
 else()
 	add_definitions("-D VGM_LITTLE_ENDIAN")
@@ -86,6 +87,10 @@ if(MINGW)
 	endif()
 else()
 	option(LINK_STATIC_LIBS "link with static runtime libraries (MinGW only)" OFF)
+endif()
+
+if (OS_KOS) # Dreamcast
+	add_definitions("-D OS_KOS")
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCC)
@@ -201,6 +206,13 @@ if(BUILD_PLAYER)
 add_executable(player player.cpp player/dblk_compr.c)
 target_include_directories(player PRIVATE ${LIBVGM_SOURCE_DIR})
 target_link_libraries(player PRIVATE vgm-audio vgm-player vgm-utils)
+
+if (OS_KOS) # Dreamcast
+	# Add romdisk
+    set(KOS_ROMDISK_DIR "${CMAKE_SOURCE_DIR}/romdisk")
+    kos_add_romdisk(player ${KOS_ROMDISK_DIR})
+endif()
+
 if(USE_SANITIZERS)
 	add_sanitizers(player)
 endif(USE_SANITIZERS)

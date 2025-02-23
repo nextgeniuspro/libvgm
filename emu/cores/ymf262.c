@@ -2074,45 +2074,45 @@ static void OPL3WriteReg(OPL3 *chip, int r, int v)
 					case 0:
 						/* 1 -> 2 -> 3 -> 4 - out */
 
-						CH->SLOT[SLOT1].connect = &chip->phase_modulation;
-						CH->SLOT[SLOT2].connect = &chip->phase_modulation2;
-						(CH+3)->SLOT[SLOT1].connect = &chip->phase_modulation;
-						(CH+3)->SLOT[SLOT2].connect = &chanout[ chan_no + 3 ];
+						CH->SLOT[SLOT1].connect = (INT32 *)&chip->phase_modulation;
+						CH->SLOT[SLOT2].connect = (INT32 *)&chip->phase_modulation2;
+						(CH+3)->SLOT[SLOT1].connect = (INT32 *)&chip->phase_modulation;
+						(CH+3)->SLOT[SLOT2].connect = (INT32 *)&chanout[ chan_no + 3 ];
 					break;
 					case 1:
 						/* 1 -> 2 -\
 						   3 -> 4 -+- out */
 
-						CH->SLOT[SLOT1].connect = &chip->phase_modulation;
-						CH->SLOT[SLOT2].connect = &chanout[ chan_no ];
-						(CH+3)->SLOT[SLOT1].connect = &chip->phase_modulation;
-						(CH+3)->SLOT[SLOT2].connect = &chanout[ chan_no + 3 ];
+						CH->SLOT[SLOT1].connect = (INT32 *)&chip->phase_modulation;
+						CH->SLOT[SLOT2].connect = (INT32 *)&chanout[ chan_no ];
+						(CH+3)->SLOT[SLOT1].connect = (INT32 *)&chip->phase_modulation;
+						(CH+3)->SLOT[SLOT2].connect = (INT32 *)&chanout[ chan_no + 3 ];
 					break;
 					case 2:
 						/* 1 -----------\
 						   2 -> 3 -> 4 -+- out */
 
-						CH->SLOT[SLOT1].connect = &chanout[ chan_no ];
-						CH->SLOT[SLOT2].connect = &chip->phase_modulation2;
-						(CH+3)->SLOT[SLOT1].connect = &chip->phase_modulation;
-						(CH+3)->SLOT[SLOT2].connect = &chanout[ chan_no + 3 ];
+						CH->SLOT[SLOT1].connect = (INT32 *)&chanout[ chan_no ];
+						CH->SLOT[SLOT2].connect = (INT32 *)&chip->phase_modulation2;
+						(CH+3)->SLOT[SLOT1].connect = (INT32 *)&chip->phase_modulation;
+						(CH+3)->SLOT[SLOT2].connect = (INT32 *)&chanout[ chan_no + 3 ];
 					break;
 					case 3:
 						/* 1 ------\
 						   2 -> 3 -+- out
 						   4 ------/     */
-						CH->SLOT[SLOT1].connect = &chanout[ chan_no ];
-						CH->SLOT[SLOT2].connect = &chip->phase_modulation2;
-						(CH+3)->SLOT[SLOT1].connect = &chanout[ chan_no + 3 ];
-						(CH+3)->SLOT[SLOT2].connect = &chanout[ chan_no + 3 ];
+						CH->SLOT[SLOT1].connect = (INT32 *)&chanout[ chan_no ];
+						CH->SLOT[SLOT2].connect = (INT32 *)&chip->phase_modulation2;
+						(CH+3)->SLOT[SLOT1].connect = (INT32 *)&chanout[ chan_no + 3 ];
+						(CH+3)->SLOT[SLOT2].connect = (INT32 *)&chanout[ chan_no + 3 ];
 					break;
 					}
 				}
 				else
 				{
 					/* 2 operators mode */
-					CH->SLOT[SLOT1].connect = CH->SLOT[SLOT1].CON ? &chanout[(r&0xf)+ch_offset] : &chip->phase_modulation;
-					CH->SLOT[SLOT2].connect = &chanout[(r&0xf)+ch_offset];
+					CH->SLOT[SLOT1].connect = (INT32 *)(CH->SLOT[SLOT1].CON ? &chanout[(r&0xf)+ch_offset] : &chip->phase_modulation);
+					CH->SLOT[SLOT2].connect = (INT32 *)&chanout[(r&0xf)+ch_offset];
 				}
 			break;
 
@@ -2126,60 +2126,60 @@ static void OPL3WriteReg(OPL3 *chip, int r, int v)
 					case 0:
 						/* 1 -> 2 -> 3 -> 4 - out */
 
-						(CH-3)->SLOT[SLOT1].connect = &chip->phase_modulation;
-						(CH-3)->SLOT[SLOT2].connect = &chip->phase_modulation2;
-						CH->SLOT[SLOT1].connect = &chip->phase_modulation;
-						CH->SLOT[SLOT2].connect = &chanout[ chan_no ];
+						(CH-3)->SLOT[SLOT1].connect = (INT32 *)&chip->phase_modulation;
+						(CH-3)->SLOT[SLOT2].connect = (INT32 *)&chip->phase_modulation2;
+						CH->SLOT[SLOT1].connect = (INT32 *)&chip->phase_modulation;
+						CH->SLOT[SLOT2].connect = (INT32 *)&chanout[ chan_no ];
 					break;
 					case 1:
 						/* 1 -> 2 -\
 						   3 -> 4 -+- out */
 
-						(CH-3)->SLOT[SLOT1].connect = &chip->phase_modulation;
-						(CH-3)->SLOT[SLOT2].connect = &chanout[ chan_no - 3 ];
-						CH->SLOT[SLOT1].connect = &chip->phase_modulation;
-						CH->SLOT[SLOT2].connect = &chanout[ chan_no ];
+						(CH-3)->SLOT[SLOT1].connect = (INT32 *)&chip->phase_modulation;
+						(CH-3)->SLOT[SLOT2].connect = (INT32 *)&chanout[ chan_no - 3 ];
+						CH->SLOT[SLOT1].connect = (INT32 *)&chip->phase_modulation;
+						CH->SLOT[SLOT2].connect = (INT32 *)&chanout[ chan_no ];
 					break;
 					case 2:
 						/* 1 -----------\
 						   2 -> 3 -> 4 -+- out */
 
-						(CH-3)->SLOT[SLOT1].connect = &chanout[ chan_no - 3 ];
-						(CH-3)->SLOT[SLOT2].connect = &chip->phase_modulation2;
-						CH->SLOT[SLOT1].connect = &chip->phase_modulation;
-						CH->SLOT[SLOT2].connect = &chanout[ chan_no ];
+						(CH-3)->SLOT[SLOT1].connect = (INT32 *)&chanout[ chan_no - 3 ];
+						(CH-3)->SLOT[SLOT2].connect = (INT32 *)&chip->phase_modulation2;
+						CH->SLOT[SLOT1].connect = (INT32 *)&chip->phase_modulation;
+						CH->SLOT[SLOT2].connect = (INT32 *)&chanout[ chan_no ];
 					break;
 					case 3:
 						/* 1 ------\
 						   2 -> 3 -+- out
 						   4 ------/     */
-						(CH-3)->SLOT[SLOT1].connect = &chanout[ chan_no - 3 ];
-						(CH-3)->SLOT[SLOT2].connect = &chip->phase_modulation2;
-						CH->SLOT[SLOT1].connect = &chanout[ chan_no ];
-						CH->SLOT[SLOT2].connect = &chanout[ chan_no ];
+						(CH-3)->SLOT[SLOT1].connect = (INT32 *)&chanout[ chan_no - 3 ];
+						(CH-3)->SLOT[SLOT2].connect = (INT32 *)&chip->phase_modulation2;
+						CH->SLOT[SLOT1].connect = (INT32 *)&chanout[ chan_no ];
+						CH->SLOT[SLOT2].connect = (INT32 *)&chanout[ chan_no ];
 					break;
 					}
 				}
 				else
 				{
 					/* 2 operators mode */
-					CH->SLOT[SLOT1].connect = CH->SLOT[SLOT1].CON ? &chanout[(r&0xf)+ch_offset] : &chip->phase_modulation;
-					CH->SLOT[SLOT2].connect = &chanout[(r&0xf)+ch_offset];
+					CH->SLOT[SLOT1].connect = (INT32 *)(CH->SLOT[SLOT1].CON ? &chanout[(r&0xf)+ch_offset] : &chip->phase_modulation);
+					CH->SLOT[SLOT2].connect = (INT32 *)&chanout[(r&0xf)+ch_offset];
 				}
 			break;
 
 			default:
 					/* 2 operators mode */
-					CH->SLOT[SLOT1].connect = CH->SLOT[SLOT1].CON ? &chanout[(r&0xf)+ch_offset] : &chip->phase_modulation;
-					CH->SLOT[SLOT2].connect = &chanout[(r&0xf)+ch_offset];
+					CH->SLOT[SLOT1].connect = (INT32 *)(CH->SLOT[SLOT1].CON ? &chanout[(r&0xf)+ch_offset] : &chip->phase_modulation);
+					CH->SLOT[SLOT2].connect = (INT32 *)&chanout[(r&0xf)+ch_offset];
 			break;
 			}
 		}
 		else
 		{
 			/* OPL2 mode - always 2 operators mode */
-			CH->SLOT[SLOT1].connect = CH->SLOT[SLOT1].CON ? &chanout[(r&0xf)+ch_offset] : &chip->phase_modulation;
-			CH->SLOT[SLOT2].connect = &chanout[(r&0xf)+ch_offset];
+			CH->SLOT[SLOT1].connect = (INT32 *)(CH->SLOT[SLOT1].CON ? &chanout[(r&0xf)+ch_offset] : &chip->phase_modulation);
+			CH->SLOT[SLOT2].connect = (INT32 *)&chanout[(r&0xf)+ch_offset];
 		}
 	break;
 

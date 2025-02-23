@@ -48,6 +48,10 @@ extern AUDIO_DRV audDrv_Pulse;
 extern AUDIO_DRV audDrv_CA;
 #endif
 
+#ifdef AUDDRV_LIBKOS
+extern AUDIO_DRV audDrv_Kos;
+#endif
+
 AUDIO_DRV* audDrivers[] =
 {
 #ifdef AUDDRV_WAVEWRITE
@@ -82,6 +86,9 @@ AUDIO_DRV* audDrivers[] =
 #endif
 #ifdef AUDDRV_CA
 	&audDrv_CA,
+#endif
+#ifdef AUDDRV_LIBKOS
+	&audDrv_Kos,
 #endif
 	NULL
 };

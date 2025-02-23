@@ -42,6 +42,12 @@ else()
 		set(ADRV_LINUX FALSE)
 	endif()
 	set(ADRV_NO_WIN TRUE)
+
+	if (OS_KOS) # Dreamcast
+		set(ADRV_APPLE FALSE)
+		set(ADRV_LINUX FALSE)
+		set(ADRV_LIBKOS TRUE)
+	endif()
 	
 	find_package(ALSA QUIET)
 	find_package(PulseAudio QUIET)
@@ -60,6 +66,7 @@ option(AUDIODRV_SADA "Audio Driver: SADA (Solaris Audio Device Architecture) [So
 option(AUDIODRV_ALSA "Audio Driver: ALSA (Advanced Linux Sound Architecture) [Linux]" ${ALSA_FOUND})
 option(AUDIODRV_PULSE "Audio Driver: PulseAudio [Linux]" ${PULSEAUDIO_FOUND})
 option(AUDIODRV_APPLE "Audio Driver: Core Audio [macOS]" ${ADRV_APPLE})
+option(AUDIODRV_LIBKOS "Audio Driver: KallistiOS [Dreamcast]" ${ADRV_LIBKOS})
 if(LINK_STATIC_LIBS)
 	# linking errors when using static library in MinGW
 	option(AUDIODRV_LIBAO "Audio Driver: libao" OFF)
@@ -146,6 +153,12 @@ if(AUDIODRV_LIBAO)
 	set(AUDIO_FILES ${AUDIO_FILES} AudDrv_libao.c)
 	set(AUDIO_LIBS ${AUDIO_LIBS} libao::libao)
 	set(AUDIO_PC_REQUIRES ${AUDIO_PC_REQUIRES} "ao")
+endif()
+
+if(AUDIODRV_LIBKOS)
+	set(AUDIO_DEFS ${AUDIO_DEFS} " AUDDRV_LIBKOS")
+	set(AUDIO_FILES ${AUDIO_FILES} AudDrv_libkos.c)
+	set(AUDIO_PC_LDFLAGS ${AUDIO_PC_LDFLAGS} "${KOS_BASE}/lib/libkos.a")
 endif()
 
 

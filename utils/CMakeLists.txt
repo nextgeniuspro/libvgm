@@ -88,6 +88,8 @@ elseif(UTIL_CHARCNV_ICONV)
 	if(NOT Iconv_IS_BUILT_IN)
 		set(UTIL_PC_LDFLAGS ${UTIL_PC_LDFLAGS} "-liconv")
 	endif()
+elseif(OS_KOS)
+	set(UTIL_FILES ${UTIL_FILES} StrUtils-NullConv.c)
 endif()
 endif(UTIL_CHARSET_CONV)
 

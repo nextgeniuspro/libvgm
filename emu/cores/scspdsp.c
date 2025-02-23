@@ -306,7 +306,7 @@ void SCSPDSP_Step(SCSPDSP *DSP)
 	memset(DSP->MIXS,0,4*16);
 }
 
-void SCSPDSP_SetSample(SCSPDSP *DSP,INT32 sample,int SEL,int MXL)
+void SCSPDSP_SetSample(SCSPDSP *DSP,INT32 sample, INT32 SEL, INT32 MXL)
 {
 	//DSP->MIXS[SEL]+=sample<<(MXL+1)/*7*/;
 	DSP->MIXS[SEL]+=sample;

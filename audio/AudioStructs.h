@@ -87,6 +87,7 @@ typedef struct _audio_driver
 #define ADRVSIG_PULSE 	0x23	// [Linux] PulseAudio
 #define ADRVSIG_CA      0x24    // [macOS] Core Audio
 #define ADRVSIG_LIBAO	0x40	// libao
+#define ADRVSIG_LIBKOS	0x41	// [Dreamcast] libKOS
 
 
 

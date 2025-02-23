@@ -23,7 +23,11 @@ extern "C" int __cdecl _getch(void);	// from conio.h
 extern "C" int __cdecl _kbhit(void);
 #else
 #include <unistd.h>		// for STDIN_FILENO and usleep()
+
+#ifndef OS_KOS
 #include <termios.h>
+#endif
+
 #include <sys/time.h>	// for struct timeval in _kbhit()
 #define	Sleep(msec)	usleep(msec * 1000)
 #endif
@@ -45,7 +49,8 @@ extern "C" int __cdecl _kbhit(void);
 #include "emu/EmuCores.h"
 #include "utils/OSMutex.h"
 
-//#define USE_MEMORY_LOADER 1	// define to use the in-memory loader
+
+#define USE_MEMORY_LOADER 1	// define to use the in-memory loader
 
 int main(int argc, char* argv[]);
 static void DoChipControlMode(PlayerBase* player);
@@ -106,12 +111,24 @@ int main(int argc, char* argv[])
 	DATA_LOADER *dLoad;
 	int curSong;
 	bool needRefresh;
+
+	char **argvPtr = argv;
+#ifdef OS_KOS
+	static char *argv2[] = { "player", "/rd/sample.vgm" };
+	argvPtr = argv2;
+	argc = 2;
+#endif
 	
 	if (argc < 2)
 	{
-		printf("Usage: %s inputfile\n", argv[0]);
+		if (argc == 1) {
+			printf("Usage: %s inputfile\n", argvPtr[0]);
+		} else {
+			printf("Usage: player inputfile\n");
+		}
 		return 0;
 	}
+
 	argbase = 1;
 #ifdef _WIN32
 	SetConsoleOutputCP(65001);	// set UTF-8 codepage
@@ -151,15 +168,15 @@ int main(int argc, char* argv[])
 	for (curSong = argbase; curSong < argc; curSong ++)
 	{
 	
-	printf("Loading %s ...  ", GetFileTitle(argv[curSong]));
+	printf("Loading %s ...  ", GetFileTitle(argvPtr[curSong]));
 	fflush(stdout);
 
 #ifdef USE_MEMORY_LOADER
 	UINT32 fileSize;
-	UINT8 *fileData = SlurpFile(argv[curSong],&fileSize);
+	UINT8 *fileData = SlurpFile(argvPtr[curSong],&fileSize);
 	dLoad = MemoryLoader_Init(fileData, fileSize);
 #else
-	dLoad = FileLoader_Init(argv[curSong]);
+	dLoad = FileLoader_Init(argvPtr[curSong]);
 #endif
 
 	if(dLoad == NULL) continue;
@@ -178,7 +195,7 @@ int main(int argc, char* argv[])
 		fprintf(stderr, "Error 0x%02X loading file!\n", retVal);
 		continue;
 	}
-	
+
 	PlayerBase* player = mainPlr.GetPlayer();
 	mainPlr.SetLoopCount(maxLoops);
 	if (player->GetPlayerType() == FCC_S98)
@@ -386,7 +403,7 @@ int main(int argc, char* argv[])
 			needRefresh = false;
 		}
 		
-		if (manualRenderLoop && ! (playState & PLAYSTATE_PAUSE))
+		if (manualRenderLoop && ! (playState & PLAYSTATE_PAUSE) && locAudBuf.size() > 0)
 		{
 			UINT32 wrtBytes = FillBuffer(audDrvLog, &mainPlr, (UINT32)locAudBuf.size(), &locAudBuf[0]);
 			AudioDrv_WriteData(audDrvLog, wrtBytes, &locAudBuf[0]);
@@ -1305,7 +1322,7 @@ static UINT8 StopDiskWriter(void)
 }
 
 
-#ifndef _WIN32
+#if !defined(_WIN32) && !defined(OS_KOS)
 static struct termios oldterm;
 static UINT8 termmode = 0xFF;
 
@@ -1350,4 +1367,16 @@ static int _kbhit(void)
 	
 	return FD_ISSET(STDIN_FILENO, &rdfs);;
 }
+#else 
+
+static void changemode(UINT8 noEcho)
+{
+	return;
+}
+
+static int _kbhit(void)
+{
+	return 0;
+}
+
 #endif

@@ -1671,7 +1671,7 @@ static void OPLWriteReg(FM_OPL *OPL, UINT8 r, UINT8 v)
 		CH = &OPL->P_CH[r&0x0f];
 		CH->SLOT[SLOT1].FB  = (v>>1)&7 ? ((v>>1)&7) + 7 : 0;
 		CH->SLOT[SLOT1].CON = v&1;
-		CH->SLOT[SLOT1].connect1 = CH->SLOT[SLOT1].CON ? &OPL->output[0] : &OPL->phase_modulation;
+		CH->SLOT[SLOT1].connect1 = (INT32 *)(CH->SLOT[SLOT1].CON ? &OPL->output[0] : &OPL->phase_modulation);
 		break;
 	case 0xe0: /* waveform select */
 		/* simply ignore write to the waveform select register if selecting not enabled in test register */
